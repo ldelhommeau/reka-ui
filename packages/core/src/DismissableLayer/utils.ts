@@ -93,22 +93,7 @@ function isLayerExist(layerElement: HTMLElement, targetElement: HTMLElement) {
         })()
 
   if (!targetLayer) {
-    // Search for all layers across contexts (document + shadow roots)
-    // Always start from the main document to get a complete view.
-    const mainDocument = layerElement.ownerDocument
-    const allLayersEverywhere = querySelectorAllCrossingBoundaries(
-      mainDocument,
-      '[data-dismissable-layer]',
-    )
-    const topmostLayer = allLayersEverywhere[allLayersEverywhere.length - 1]
-    const isTopmostLayer = mainLayer === topmostLayer
-    // Only the topmost layer should handle outside clicks
-    if (isTopmostLayer) {
-      return false
-    }
-    else {
-      return true // Treat as inside to prevent lower layer dismissal
-    }
+    return false
   }
 
   // If target layer is the same as main layer, target is inside
