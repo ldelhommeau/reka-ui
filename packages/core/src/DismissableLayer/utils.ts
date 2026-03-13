@@ -15,19 +15,19 @@ export const FOCUS_OUTSIDE = 'dismissableLayer.focusOutside'
 
 export function getRootNode(element: HTMLElement | null): Document | ShadowRoot {
   const rootNode = element?.getRootNode()
-  if (rootNode instanceof ShadowRoot)
+  if (rootNode instanceof ShadowRoot || rootNode instanceof Document)
     return rootNode
-  return document
+  return element?.ownerDocument ?? document
 }
 
 /**
  * Find all dismissable layers in the current context
  */
 export function getAllDismissableLayers(startElement: HTMLElement): HTMLElement[] {
-  const rootNode = startElement.getRootNode()
+  const rootNode = getRootNode(startElement)
 
   if (rootNode instanceof Document || rootNode instanceof ShadowRoot) {
-    return Array.from(rootNode.querySelectorAll('[data-dismissable-layer]')) as HTMLElement[]
+    return [...rootNode.querySelectorAll('[data-dismissable-layer]')] as HTMLElement[]
   }
 
   return []
@@ -49,9 +49,7 @@ export function isLayerExist(layerElement: HTMLElement, targetElement: HTMLEleme
 
   const rootNode = getRootNode(layerElement)
 
-  const nodeList = Array.from(
-    rootNode.querySelectorAll('[data-dismissable-layer]'),
-  )
+  const nodeList = [...rootNode.querySelectorAll('[data-dismissable-layer]')]
 
   if (targetLayer && (mainLayer === targetLayer || nodeList.indexOf(mainLayer) < nodeList.indexOf(targetLayer))) {
     return true
